@@ -1,6 +1,5 @@
 package com.back.demo;
 
-//import java.net.http.HttpHeaders;
 import java.util.List;
 
 import org.springframework.http.ContentDisposition;
@@ -15,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-//import com.mongodb.client.MongoClient;
-
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "com.back.demo")
+@EnableMongoRepositories
 @RestController
 public class BackApplication {
 	private final AuthService authService;
@@ -80,6 +77,10 @@ public class BackApplication {
 	public ResponseEntity<byte[]> encryptFile(@RequestParam("file") MultipartFile file,
 											  @RequestParam("username") String username){
 		try {
+			String fileName = file.getOriginalFilename();
+			if(fileName != null && fileName.contains(".")){
+				fileName = "encryptado" + fileName;
+			}
 
 			byte[] fileContent = file.getBytes();
 			byte[] encryptedData = authService.encryptFile(username, fileContent);
@@ -87,11 +88,9 @@ public class BackApplication {
 
             HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-			headers.setContentDisposition(ContentDisposition.builder("attachment").filename("encriptado.txt").build());
+			headers.setContentDisposition(ContentDisposition.builder("attachment").filename(fileName).build());
 
 			return ResponseEntity.ok().headers(headers).body(encryptedData);
-
-
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(null);
 			// TODO: handle exception
@@ -104,13 +103,17 @@ public class BackApplication {
 	public ResponseEntity<byte[]> decryptFile(@RequestParam("file") MultipartFile file,
 											  @RequestParam("username") String username){
 		try {
+			String fileName = file.getOriginalFilename();
+			if(fileName != null && fileName.contains(".")){
+				fileName = "desencryptado" + fileName;
+			}
 
 			byte[] fileContent = file.getBytes();
 			byte[] decryptedData = authService.decryptFile(username, fileContent);
 
             HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-			headers.setContentDisposition(ContentDisposition.builder("attachment").filename("original.txt").build());
+			headers.setContentDisposition(ContentDisposition.builder("attachment").filename(fileName).build());
 
 			return ResponseEntity.ok().headers(headers).body(decryptedData);
 
@@ -120,7 +123,4 @@ public class BackApplication {
 			// TODO: handle exception
 		}
 	}
-
-
-
 }
