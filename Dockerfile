@@ -1,22 +1,22 @@
-FROM openjdk:17-jdk-slim
+# Usar una imagen base de Maven o OpenJDK para la construcción
+FROM maven:latest as build
 
-# Instalar Maven
-RUN apt-get update && apt-get install -y maven
-
-# Establecer el directorio de trabajo
 WORKDIR /app
 
 # Copiar los archivos del proyecto
 COPY pom.xml .
 COPY src ./src
 
-# Ejecutar la compilación de Maven
+# Compilar el proyecto con Maven
 RUN mvn clean install
 
-# Definir el contenedor base para la ejecución
+# Usar una imagen base de OpenJDK para ejecutar la aplicación
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
+
+# Copiar el JAR generado desde el contenedor de construcción
 COPY --from=build /app/target/your-artifact.jar /app/your-artifact.jar
 
+# Comando para ejecutar la aplicación
 CMD ["java", "-jar", "your-artifact.jar"]
