@@ -80,6 +80,8 @@ public class BackApplication {
 			String fileName = file.getOriginalFilename();
 			if(fileName != null && fileName.contains(".")){
 				fileName = "encryptado" + fileName;
+			}else{
+				fileName = "archivo_encriptado.txt";
 			}
 
 			byte[] fileContent = file.getBytes();
@@ -106,6 +108,8 @@ public class BackApplication {
 			String fileName = file.getOriginalFilename();
 			if(fileName != null && fileName.contains(".")){
 				fileName = "desencryptado" + fileName;
+			}else{
+				fileName = "archivo_desencriptado.txt";
 			}
 
 			byte[] fileContent = file.getBytes();
