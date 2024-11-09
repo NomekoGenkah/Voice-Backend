@@ -21,7 +21,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
-@EnableMongoRepositories
+@EnableMongoRepositories(basePackages = "com.back.demo")
 @RestController
 public class BackApplication {
 	private final AuthService authService;
