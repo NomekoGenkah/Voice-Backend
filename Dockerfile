@@ -4,16 +4,19 @@ FROM openjdk:17-jdk-slim
 # Establece el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copia el archivo pom.xml y el wrapper de Maven
-COPY pom.xml ./
-COPY .mvn/ .mvn
+# Copia el archivo mvnw al contenedor
 COPY mvnw ./
-RUN ./mvnw dependency:resolve
+
+# Copia el archivo pom.xml
+COPY pom.xml ./
+
+# Da permisos de ejecución al archivo mvnw
+RUN chmod +x mvnw
 
 # Copia el código fuente
 COPY src ./src
 
-# Compila el proyecto y genera el JAR
+# Compila el proyecto y genera el JAR usando mvnw
 RUN ./mvnw clean package -DskipTests
 
 # Expone el puerto 8080
