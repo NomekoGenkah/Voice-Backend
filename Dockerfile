@@ -1,34 +1,26 @@
-# Use a base image with Java to build the project
-FROM openjdk:17 as build
+# Usa una imagen base para un proyecto Maven
+FROM maven:3.8.6-openjdk-17-slim as build
 
-# Set the working directory in the container
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copy the Maven wrapper and the pom.xml to download dependencies
-COPY mvnw .
-COPY .mvn .mvn
+# Copia el archivo POM y otros archivos necesarios
 COPY pom.xml .
 
-# Download the dependencies (this will be cached if there are no changes to the pom.xml)
-RUN ./mvnw dependency:go-offline
-
-# Copy the entire src folder into the container
+# Copia el código fuente
 COPY src ./src
 
-# Build the project (creates the jar file)
-RUN ./mvnw clean package -DskipTests
+# Compila el proyecto Maven
+RUN mvn clean install
 
-# Use the same base image for the final image to ensure compatibility
-FROM openjdk:17
+# Usa una imagen base más liviana para la ejecución
+FROM openjdk:17-jdk-slim
 
-# Set the working directory in the container
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copy the built jar file from the build stage (replace with the correct name of your jar)
-COPY --from=build /app/target/*.jar app.jar
+# Copia los archivos del contenedor de construcción
+COPY --from=build /app/target/your-artifact.jar /app/your-artifact.jar
 
-# Expose the port your Spring Boot app runs on (usually 8080)
-EXPOSE 8080
-
-# Command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Comando para ejecutar la aplicación
+CMD ["java", "-jar", "your-artifact.jar"]
