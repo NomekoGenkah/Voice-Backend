@@ -16,7 +16,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copiar el JAR generado desde el contenedor de construcción
-COPY --from=build /app/target/your-artifact.jar /app/your-artifact.jar
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar /app/demo-0.0.1-SNAPSHOT.jar
 
 # Comando para ejecutar la aplicación
 CMD ["java", "-jar", "your-artifact.jar"]
