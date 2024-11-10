@@ -2,7 +2,6 @@ package com.back.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.Arrays;
 import java.util.Optional;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -98,8 +97,9 @@ public class AuthService {
 		try {
 			double[][] matrixKey = getUserKeyMatrix(username);
 			SecretKeySpec keySpec = Cifrar.generateAESKey(matrixKey);
+			byte[] matrixBytes = Cifrar.encryptWithMatrix(fileBytes, matrixKey);
 
-			byte[] encryptedData = Cifrar.encryptWithAES(fileBytes, keySpec);
+			byte[] encryptedData = Cifrar.encryptWithAES(matrixBytes, keySpec);
 
 			return encryptedData;
 		} catch (Exception e) {
@@ -115,14 +115,13 @@ public class AuthService {
 			SecretKeySpec keySpec = Cifrar.generateAESKey(matrixKey);
 
 			byte[] decryptedData = Cifrar.decryptWithAES(fileBytes, keySpec);
+			byte[] matrixBytes = Cifrar.decryptWithMatrix(decryptedData, matrixKey);
 
-			return decryptedData;
+			return matrixBytes;
 		} catch (Exception e) {
 			System.out.println("error en encryptFile");
 			return null;
 			// TODO: handle exception
 		}
 	}
-
-
 }
