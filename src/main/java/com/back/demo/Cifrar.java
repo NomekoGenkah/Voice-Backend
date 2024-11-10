@@ -36,38 +36,5 @@ public class Cifrar {
         cipher.init(Cipher.DECRYPT_MODE, aesKey);
         return cipher.doFinal(encryptedData);
     }
-
-    public static byte[] encryptWithMatrix(byte[] data, double[][] matrix) {
-        int N = matrix.length;
-
-        int paddedLength = (int) Math.ceil((double) data.length / N) * N;
-        byte[] paddedData = Arrays.copyOf(data, paddedLength);
-
-        byte[] encryptedData = new byte[paddedLength];
-
-        for (int i = 0; i < paddedLength; i += N) {
-            byte[] segment = Arrays.copyOfRange(paddedData, i, i + N);
-            byte[] encryptedSegment = Matrix.matrixMultiply(matrix, segment);
-            System.arraycopy(encryptedSegment, 0, encryptedData, i, N);
-        }
-
-        return encryptedData;
-    }
-
-    public static byte[] decryptWithMatrix(byte[] encryptedData, double[][] matrix) {
-        int N = matrix.length;
-
-        double[][] inverseMatrix = Matrix.invertMatrix(matrix);
-
-        byte[] decryptedData = new byte[encryptedData.length];
-
-        for (int i = 0; i < encryptedData.length; i += N) {
-            byte[] segment = Arrays.copyOfRange(encryptedData, i, i + N);
-            byte[] decryptedSegment = Matrix.matrixMultiply(inverseMatrix, segment);
-            System.arraycopy(decryptedSegment, 0, decryptedData, i, N);
-        }
-
-        return decryptedData;
-    }
     
 }
