@@ -119,4 +119,57 @@ public class Matrix {
         }
         return value * size;
     }
+
+    public static double[][] invertMatrix(double[][] matrix){
+        int N = matrix.length;
+        double[][] inverse = new double[N][N];
+
+
+        double[][] augmented = new double[N][2 * N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                augmented[i][j] = matrix[i][j];
+            }
+            augmented[i][i + N] = 1;
+        }
+
+        for (int i = 0; i < N; i++) {
+            double diagValue = augmented[i][i];
+            for (int j = 0; j < 2 * N; j++) {
+                augmented[i][j] /= diagValue;
+            }
+            for (int k = 0; k < N; k++) {
+                if (k != i) {
+                    double factor = augmented[k][i];
+                    for (int j = 0; j < 2 * N; j++) {
+                        augmented[k][j] -= factor * augmented[i][j];
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                inverse[i][j] = augmented[i][j + N];
+            }
+        }
+
+        return inverse;
+    }
+
+    public static byte[] matrixMultiply(double[][] matrix, byte[] vector) {
+        int N = matrix.length;
+        byte[] result = new byte[N];
+
+        for (int i = 0; i < N; i++) {
+            double sum = 0;
+            for (int j = 0; j < N; j++) {
+                sum += matrix[i][j] * vector[j];
+            }
+            result[i] = (byte) (sum % 256);  // Using modulo to keep within byte range
+        }
+
+        return result;
+    }
 }
+
