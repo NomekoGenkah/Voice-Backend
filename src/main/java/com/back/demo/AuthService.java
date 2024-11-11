@@ -18,6 +18,7 @@ public class AuthService {
 
 	//   ta listo CAMBIAR. ESTA FUNCION DEBE DEVOLVER TRUE SI LA MATRIZ DE USUARIO COINCIDE. SOLO DEBE HACER PULL DE LA DE USUARIO Y HACER LA MATRIZ DEL AUDIO SELECCIONADO
     public boolean authenticateWithAudio(MultipartFile audioFile, String username) {
+	    
 		if (audioFile != null && !audioFile.isEmpty()) {
 			try {
 				Optional<User> userOptional = userRepository.findByUsername(username);
@@ -71,6 +72,10 @@ public class AuthService {
 	}
 
 	public boolean registerUser(List<MultipartFile> audioList, String username){
+
+		if(userExists(username)){
+			return false;
+		}
 		try {
 			List<double[][]> matrixList = new ArrayList<>();
 
