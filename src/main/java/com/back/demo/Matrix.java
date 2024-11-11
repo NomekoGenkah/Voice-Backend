@@ -82,6 +82,10 @@ public class Matrix {
                 }
             }
         }
+        if(compararMatricesEuclidiana(matrixA, matrixB)){
+            count += maxCount/10;
+        }
+            
         int limit = (maxCount * 90)/ 100;
         //System.out.println(count);
         return count > limit-1 ;
@@ -120,5 +124,21 @@ public class Matrix {
         }
         return value * size;
     }
+
+    public static boolean compararMatricesEuclidiana(double[][] matrix1, double[][] matrix2) {
+        double distancia = 0.0;
+
+        for (int i = 0; i < matrix1.length; i++) {
+            for (int j = 0; j < matrix1[i].length; j++) {
+                distancia += Math.pow(matrix1[i][j] - matrix2[i][j], 2);
+            }
+        }
+        distancia = Math.sqrt(distancia);
+    
+        return distancia < 0.3;
+    }
+
+
+    
 }
 
