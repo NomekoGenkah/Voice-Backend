@@ -26,10 +26,10 @@ public class AuthService {
 				System.out.println(audioFile.getOriginalFilename());
 				byte[] audioBytes = audioFile.getBytes();
 				//Hay que cambiar bytes per frame
-				double[] audioDouble = Matrix.convertToDoubleArray(audioBytes, 1);
+				double[] audioDouble = Matrix.convertToDoubleArray(audioBytes, 2);
 				double[] fft = FFT.Fourier(audioDouble);
 
-				double[][] matrix = Matrix.generarMatrix(fft, 5, 300, 1500, 16000.0f);
+				double[][] matrix = Matrix.generarMatrix(fft, 5, 300, 1500, 44000.0f);
 				double[][] matrixUser = user.getMatrix();
 
 				if(Matrix.compareMatrix(matrix, matrixUser, 0.04)){
