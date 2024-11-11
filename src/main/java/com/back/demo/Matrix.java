@@ -82,7 +82,7 @@ public class Matrix {
                 }
             }
         }
-        int limit = (maxCount * 90)/ 100
+        int limit = (maxCount * 90)/ 100;
         //System.out.println(count);
         return count > limit-1 ;
     }
