@@ -6,45 +6,45 @@ import java.util.Comparator;
 
 public class Matrix {
 
-    public static double[][] generarMatrix(double[] fft, int size, int minFreq, int maxFreq, float sampleRate){
+    public static double[][] generarMatrix(double[] fft, int size, int minFreq, int maxFreq, float sampleRate) {
         int n = fft.length / 2;
         double[][] matrix = new double[size][size];
-
+    
         int minIndex = (int) (minFreq / (sampleRate / n));
         int maxIndex = (int) (maxFreq / (sampleRate / n));
-
-
-        double[][] magnitudes = new double[maxIndex - minIndex + 1][2];
+    
+        // Asegurar que minIndex y maxIndex estén dentro del rango FFT
+        minIndex = Math.max(minIndex, 0);
+        maxIndex = Math.min(maxIndex, n - 1);
+    
+        // Calcular las frecuencias en el rango de índices especificado
+        double[][] frequencies = new double[maxIndex - minIndex + 1][2];
         for (int i = minIndex; i <= maxIndex; i++) {
-            double real = fft[2 * i];
-            double imag = fft[2 * i + 1];
-            magnitudes[i - minIndex][0] = Math.sqrt(real * real + imag * imag);  // Magnitude
-            magnitudes[i - minIndex][1] = i;  // Index
+            double frequency = i * (sampleRate / n);
+            double magnitude = Math.sqrt(fft[2 * i] * fft[2 * i] + fft[2 * i + 1] * fft[2 * i + 1]);
+            frequencies[i - minIndex][0] = frequency;
+            frequencies[i - minIndex][1] = magnitude;
         }
-
-
-        double maxMagnitude = Arrays.stream(magnitudes).mapToDouble(m -> m[0]).max().orElse(1.0);
-        for (double[] magnitude : magnitudes) {
-            magnitude[0] /= maxMagnitude;
-        }
-
-
-        Arrays.sort(magnitudes, Comparator.comparingDouble(o -> -o[0]));
+    
+        // Ordenar frecuencias de mayor a menor magnitud
+        Arrays.sort(frequencies, Comparator.comparingDouble(o -> -o[1]));
+    
+        // Llenar la matriz con las frecuencias ordenadas por magnitud
         int count = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (count < magnitudes.length) {
-                    matrix[i][j] = magnitudes[count][0];
+                if (count < frequencies.length) {
+                    matrix[i][j] = frequencies[count][0];  // Llenar con la frecuencia
                     count++;
                 } else {
-                    matrix[i][j] = 0;
+                    matrix[i][j] = 0;  // Llenar con ceros si faltan datos
                 }
             }
         }
-
-
+    
         return matrix;
     }
+    
 
     public static double[][] generarMatrixKey(List<double[][]> matrices){
         int size = matrices.get(0).length;
@@ -87,8 +87,8 @@ public class Matrix {
         }
             
         int limit = (maxCount * 90)/ 100;
-        //System.out.println(count);
-        return count > limit + 1;
+        System.out.println("elementos " + count);
+        return count > limit-1 ;
     }
 
     public static double[] convertToDoubleArray(byte[] audioBytes, int bytesPerFrame) {
@@ -134,11 +134,11 @@ public class Matrix {
             }
         }
         distancia = Math.sqrt(distancia);
-        System.out.println(distancia);
-        return distancia < 0.15;
-    }
-
+        System.out.println("distancia" + distancia);
 
     
+        return distancia < 1500;
+    }
+
 }
 
