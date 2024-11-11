@@ -134,8 +134,8 @@ public class Matrix {
             }
         }
         distancia = Math.sqrt(distancia);
-    
-        return distancia < 0.3;
+        System.out.println(distancia);
+        return distancia < 0.2;
     }
 
 
