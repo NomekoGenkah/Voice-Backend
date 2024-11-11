@@ -32,7 +32,7 @@ public class AuthService {
 				double[][] matrix = Matrix.generarMatrix(fft, 5, 300, 1500, 44000.0f);
 				double[][] matrixUser = user.getMatrix();
 
-				if(Matrix.compareMatrix(matrix, matrixUser, 0.04)){
+				if(Matrix.compareMatrix(matrix, matrixUser, 650)){
 					return true;
 				}else{
 					return false;
