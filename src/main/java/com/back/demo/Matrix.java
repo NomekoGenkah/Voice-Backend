@@ -88,7 +88,7 @@ public class Matrix {
             
         int limit = (maxCount * 90)/ 100;
         System.out.println("elementos " + count);
-        return count > limit-1 ;
+        return count > (limit-5)/2 ;
     }
 
     public static double[] convertToDoubleArray(byte[] audioBytes, int bytesPerFrame) {
